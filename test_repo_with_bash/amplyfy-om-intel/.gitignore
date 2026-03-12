@@ -1,0 +1,19 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# Environment (contains secrets)
+.env
+
+# Data (large/fetched files — re-run make fetch.all to regenerate)
+data/raw/
+data/processed/
+
+# macOS
+.DS_Store
