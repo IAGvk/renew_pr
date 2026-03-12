@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Amplyfy • O&M Intelligence (MVP Prototype)</title>
+    <style>
+        :root {
+            --bg: #faf7f2;
+            --panel: #7a6a51;
+            --ink: #2a2623;
+            --muted: #8b8177;
+            --line: #e8e1d9;
+            --brand: #c27b39;
+            --brand-ink: #fff;
+            --accent: #e4a968;
+            --ok: #3d8b6d;
+            --warn: #b0751a;
+            --radius: 12px;
+            --shadow: 0 10px 20px rgba(0, 0, 0, .05);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--ink);
+            font: 16px/1.45 system-ui, Segoe UI, Inter, Roboto, Helvetica, Arial
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: linear-gradient(180deg, #fffaf3, #fffdf8);
+            border-bottom: 1px solid var(--line)
+        }
+
+        .bar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--brand), #e7b37a);
+            box-shadow: 0 4px 12px rgba(194, 123, 57, .35)
+        }
+
+        .brand {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-weight: 800;
+            letter-spacing: .2px
+        }
+
+        nav {
+            margin-left: auto;
+            display: flex;
+            gap: 6px
+        }
+
+        nav button {
+            background: transparent;
+            border: 0;
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        nav button.active,
+        nav button:hover {
+            background: #fff6ea;
+            color: var(--brand)
+        }
+
+        .user {
+            margin-left: 8px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            background: #fff3e1;
+            color: var(--brand);
+            font-weight: 700;
+            border: 1px solid var(--line)
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 18px
+        }
+
+        .grid {
+            display: grid;
+            gap: 16px
+        }
+
+        .g2 {
+            grid-template-columns: 1.2fr .8fr
+        }
+
+        @media(max-width:980px) {
+            .g2 {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .h1 {
+            font-weight: 800;
+            font-size: 1.4rem;
+            margin: 0 0 10px
+        }
+
+        .h2 {
+            font-weight: 800;
+            margin: 0 0 8px
+        }
+
+        .subtle {
+            color: var(--muted)
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .btn {
+            background: var(--brand);
+            color: var(--brand-ink);
+            border: 0;
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-weight: 800;
+            cursor: pointer
+        }
+
+        .btn:hover {
+            background: #b46d2f
+        }
+
+        .btn.secondary {
+            background: #fff;
+            color: var(--brand);
+            border: 1px solid var(--brand)
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px dashed var(--line);
+            color: #4a433e
+        }
+
+        .input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fffefd;
+            font: inherit
+        }
+
+        .map {
+            height: 360px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            background: linear-gradient(180deg, #fffdfa, #fff7ec), repeating-linear-gradient(0deg, transparent 0 19px, rgba(0, 0, 0, .03) 19px 20px),
+                repeating-linear-gradient(90deg, transparent 0 19px, rgba(0, 0, 0, .03) 19px 20px)
+        }
+
+        .chips {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .chip {
+            padding: 5px 9px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 700
+        }
+
+        .chip.active,
+        .chip:hover {
+            background: #fff4e6;
+            border-color: #f0e2cf;
+            color: var(--brand)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        thead th {
+            text-align: left;
+            font-size: .92rem;
+            color: var(--muted);
+            padding: 6px 4px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        tbody td {
+            padding: 8px 4px;
+            border-bottom: 1px solid var(--line)
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #2e2a26;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all .22s
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        .pill {
+            font-size: .78rem;
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: #fff0da;
+            color: var(--brand);
+            font-weight: 800
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="bar">
+            <div class="brand">
+                <div class="logo"></div> Amplyfy
+            </div>
+            <nav id="nav">
+                <button type="button" data-view="sites" class="active">Sites</button>
+                <button type="button" data-view="upload">Upload</button>
+                <button type="button" data-view="detections">Detections</button>
+                <button type="button" data-view="roi">ROI</button>
+                <button type="button" data-view="actions">Actions</button>
+                <button type="button" data-view="workorder">Work Order</button>
+            </nav>
+            <div class="user">Vikesh • Owner</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- SITES -->
+        <section id="sites">
+            <h1 class="h1">Sites</h1>
+            <div class="card">
+                <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+                    <div class="row" style="gap:10px">
+                        <div class="h2">Pilot C&amp;I Rooftop</div>
+                        <span class="pill">Sydney, 3.0 MW</span>
+                        <span class="subtle">Last ingest: ✓ • ΔMWh Found: 1.2</span>
+                    </div>
+                    <div class="row">
+                        <button type="button" class="btn secondary" data-goto="upload">Upload</button>
+                        <button type="button" class="btn secondary" data-goto="detections">Detections</button>
+                        <button type="button" class="btn secondary" data-goto="roi">ROI</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UPLOAD -->
+        <section id="upload" hidden>
+            <h1 class="h1">Upload / Ingest</h1>
+            <div class="grid g2">
+                <div class="card">
+                    <div class="h2">Drop files</div>
+                    <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px">
+                        <div class="card">
+                            <div class="subtle">RGB Orthomosaic</div><button type="button" class="btn ghost"
+                                data-action="upload" data-kind="rgb">Choose file</button>
+                        </div>
+                        <div class="card">
+                            <div class="subtle">Thermal Orthomosaic</div><button type="button" class="btn ghost"
+                                data-action="upload" data-kind="thermal">Choose file</button>
+                        </div>
+                        <div class="card">
+                            <div class="subtle">Telemetry CSV</div><button type="button" class="btn ghost"
+                                data-action="upload" data-kind="csv">Choose file</button>
+                        </div>
+                        <div class="card">
+                            <div class="subtle">Flight Log (opt)</div><button type="button" class="btn ghost"
+                                data-action="upload" data-kind="log">Choose file</button>
+                        </div>
+                    </div>
+                    <div style="height:10px"></div>
+                    <div class="h2">Pending</div>
+                    <div id="pending" class="grid"></div>
+                </div>
+                <div class="card">
+                    <div class="h2">Metadata & QC</div>
+                    <div class="grid" style="gap:10px">
+                        <label>Flight date/time <input class="input" type="datetime-local"
+                                value="2026-03-12T10:00"></label>
+                        <label>Emissivity <input class="input" type="number" step="0.01" value="0.95"></label>
+                        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+                            <label>Wind (m/s) <input class="input" type="number" step="0.1" value="2.0"></label>
+                            <label>Irradiance (W/m²) <input class="input" type="number" value="780"></label>
+                        </div>
+                        <label>GSD (cm/pixel) <input class="input" type="number" step="0.01" value="2.5"></label>
+                        <div class="row">
+                            <button type="button" class="btn secondary" data-action="qc">Compute via NASA POWER</button>
+                            <button type="button" class="btn" data-action="process">Start Processing</button>
+                        </div>
+                        <ul class="subtle" style="margin:0;line-height:1.65">
+                            <li>✓ Irradiance &gt; 600 W/m²</li>
+                            <li>✓ Overlap OK</li>
+                            <li>⚠ Wind borderline</li>
+                            <li>✓ Radiometric calibration OK</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DETECTIONS -->
+        <section id="detections" hidden>
+            <h1 class="h1">Detections</h1>
+            <div class="grid g2">
+                <div class="card">
+                    <div class="row" style="justify-content:space-between">
+                        <div class="chips">
+                            <button type="button" class="chip active">Soiling</button>
+                            <button type="button" class="chip active">Vegetation</button>
+                            <button type="button" class="chip active">Hotspots</button>
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn ghost">RGB</button>
+                            <button type="button" class="btn ghost">Thermal</button>
+                        </div>
+                    </div>
+                    <div class="map">Map preview • detection polygons</div>
+                </div>
+                <div class="card">
+                    <div class="h2">List</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Conf</th>
+                                <th>Ref</th>
+                                <th>ΔMWh</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="det-list"></tbody>
+                    </table>
+                    <div class="row" style="margin-top:10px">
+                        <button type="button" class="btn" data-goto="roi">Estimate Impact</button>
+                        <button type="button" class="btn secondary">Add to Work Order</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI -->
+        <section id="roi" hidden>
+            <h1 class="h1">ROI Summary</h1>
+            <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+                <div class="card">
+                    <div class="subtle">Estimated Annual Loss</div>
+                    <div class="h2" style="font-size:1.6rem">1.37 MWh</div>
+                </div>
+                <div class="card">
+                    <div class="subtle">Value at Risk</div>
+                    <div class="h2" style="font-size:1.6rem">AUD $192</div>
+                </div>
+                <div class="card">
+                    <div class="subtle">Quick Wins</div>
+                    <div class="h2" style="font-size:1.6rem">3 actions</div>
+                </div>
+            </div>
+            <div class="card" style="margin-top:12px">
+                <div class="h2">Breakdown</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>ΔMWh</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Soiling</td>
+                            <td>2</td>
+                            <td>0.82</td>
+                        </tr>
+                        <tr>
+                            <td>Vegetation</td>
+                            <td>1</td>
+                            <td>0.34</td>
+                        </tr>
+                        <tr>
+                            <td>Hotspots</td>
+                            <td>3</td>
+                            <td>0.21</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row" style="margin-top:10px">
+                    <button type="button" class="btn" data-goto="actions">Generate Prioritized Actions</button>
+                    <button type="button" class="btn secondary">Export CSV</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACTIONS -->
+        <section id="actions" hidden>
+            <h1 class="h1">Prioritized Actions</h1>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Action</th>
+                            <th>Impact</th>
+                            <th>Cost</th>
+                            <th>Rank</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="act-list"></tbody>
+                </table>
+                <div class="row" style="margin-top:10px">
+                    <button type="button" class="btn" data-goto="workorder">Create Work Order</button>
+                    <button type="button" class="btn secondary">Send to Agentic Prioritizer (v2)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORK ORDER -->
+        <section id="workorder" hidden>
+            <h1 class="h1">Create Work Order</h1>
+            <div class="grid g2">
+                <div class="card">
+                    <label>Title <input class="input" id="wo-title" value="C&I Rooftop — Q2 Quick Wins"></label><br />
+                    <label>Description <textarea class="input"
+                            rows="4">Bundle quick ROI actions before monsoon.</textarea></label><br />
+                    <div class="row">
+                        <button type="button" class="btn" id="wo-create">Create Work Order</button>
+                        <button type="button" class="btn secondary">Cancel</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="h2">Actions Included</div>
+                    <ul id="wo-items" style="margin:0;padding-left:1.1rem;line-height:1.65"></ul>
+                    <div class="row" style="justify-content:space-between;margin-top:10px">
+                        <div>
+                            <div class="subtle">Estimated Total Cost</div>
+                            <div class="h2" id="wo-cost">AUD $0</div>
+                        </div>
+                        <div>
+                            <div class="subtle">Estimated Energy Gain</div>
+                            <div class="h2" id="wo-gain">0.00 MWh</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast" id="toast">Saved</div>
+
+    <script>
+        (function () {
+            const views = ["sites", "upload", "detections", "roi", "actions", "workorder"];
+            const toastEl = document.getElementById('toast');
+            const show = id => views.forEach(v => {
+                const el = document.getElementById(v);
+                if (el) el.hidden = (v !== id);
+                document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.view === id));
+            });
+            const toast = msg => { toastEl.textContent = msg; toastEl.classList.add('show'); setTimeout(() => toastEl.classList.remove('show'), 1400); };
+
+            // Router: top nav + data-goto
+            document.getElementById('nav').addEventListener('click', e => {
+                const btn = e.target.closest('button[data-view]'); if (!btn) return;
+                const v = btn.dataset.view; show(v); location.hash = v;
+            });
+            document.body.addEventListener('click', e => {
+                const go = e.target.closest('[data-goto]'); if (go) { show(go.dataset.goto); location.hash = go.dataset.goto; }
+                const up = e.target.closest('[data-action="upload"]'); if (up) { addPending(up.dataset.kind); }
+                const qc = e.target.closest('[data-action="qc"]'); if (qc) { toast('NASA POWER QC computed'); }
+                const proc = e.target.closest('[data-action="process"]'); if (proc) { toast('Processing started'); }
+            });
+
+            // Pending uploads
+            const pending = document.getElementById('pending');
+            function addPending(kind) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<div class="row"><b>${kind.toUpperCase()}</b><span class="subtle">• Processing...</span><span style="margin-left:auto"><button type="button" class="btn ghost">Remove</button></span></div>`;
+                pending.prepend(card);
+                toast(`${kind.toUpperCase()} queued`);
+                setTimeout(() => { card.querySelector('.subtle').innerHTML = '<span style="color:var(--ok);font-weight:800">✓ Completed</span>'; }, 1200);
+            }
+
+            // Demo data for detections/actions
+            const det = [
+                { t: 'Hotspot', c: 0.94, r: 'Module A3‑R2', d: 0.12 },
+                { t: 'Vegetation', c: 0.89, r: 'String S12', d: 0.34 },
+                { t: 'Soiling', c: 0.82, r: 'Array A patch', d: 0.51 },
+            ];
+            const detList = document.getElementById('det-list');
+            det.forEach(x => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><input type="checkbox" checked> ${x.t}</td><td>${x.c.toFixed(2)}</td><td>${x.r}</td><td>+${x.d.toFixed(2)} MWh</td><td><button type="button" class="btn ghost" data-add="${x.t}">Add</button></td>`;
+                detList.appendChild(tr);
+            });
+
+            // Actions + Work Order builder
+            const actions = [
+                { name: 'Trim vegetation S12', impact: 0.34, cost: 32, rank: 9.7 },
+                { name: 'Clean array A', impact: 0.82, cost: 46, rank: 9.3 },
+                { name: 'Inspect hotspot #32', impact: 0.12, cost: 15, rank: 8.9 },
+            ];
+            const actList = document.getElementById('act-list');
+            actions.forEach((a, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${i + 1}</td><td>${a.name}</td><td>+${a.impact.toFixed(2)} MWh</td><td>AUD $${a.cost}</td><td>★${a.rank}</td><td><button type="button" class="btn ghost" data-include="${i}">Include</button></td>`;
+                actList.appendChild(tr);
+            });
+
+            const wo = { idx: new Set(), cost: 0, gain: 0 };
+            const woItems = document.getElementById('wo-items');
+            const woGain = document.getElementById('wo-gain');
+            const woCost = document.getElementById('wo-cost');
+
+            document.body.addEventListener('click', e => {
+                const inc = e.target.closest('[data-include]');
+                if (inc) {
+                    const i = +inc.dataset.include;
+                    if (!wo.idx.has(i)) {
+                        wo.idx.add(i); wo.cost += actions[i].cost; wo.gain += actions[i].impact;
+                        syncWO(); toast(`Included: ${actions[i].name}`);
+                    } else { toast('Already included'); }
+                }
+            });
+
+            function syncWO() {
+                woItems.innerHTML = '';
+                [...wo.idx].forEach(i => {
+                    const li = document.createElement('li'); li.textContent = actions[i].name; woItems.appendChild(li);
+                });
+                woCost.textContent = `AUD $${wo.cost}`;
+                woGain.textContent = `${wo.gain.toFixed(2)} MWh`;
+            }
+
+            document.getElementById('wo-create').addEventListener('click', () => {
+                if (wo.idx.size === 0) { toast('No actions included'); return; }
+                toast('Work Order created');
+            });
+
+            // Initial route
+            const start = (location.hash || '#sites').replace('#', '');
+            show(views.includes(start) ? start : 'sites');
+        })();
+    </script>
+</body>
+
+</html>

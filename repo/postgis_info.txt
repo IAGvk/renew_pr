@@ -1,0 +1,13 @@
+brew install postgis is a large installation because PostGIS is not a standalone application, but rather a complex extension that brings in numerous heavy, high-performance geospatial libraries and requires a compatible PostgreSQL instance to function. 
+GitHub
+GitHub
+ +4
+Here are the primary reasons for its large size:
+Transitive Dependencies: PostGIS depends on several major, specialized open-source geospatial libraries, which Homebrew must download and build. These include:
+GEOS (Geometry Engine, Open Source): For spatial geometry operations.
+GDAL (Geospatial Data Abstraction Library): For raster data support.
+PROJ: For coordinate transformation and projection.
+JSON-C, Boost, and others: Necessary for parsing and performance.
+PostgreSQL Dependency: The formula often installs a full PostgreSQL server instance alongside it to ensure compatibility, resulting in a large download of both database server and extension code.
+Building from Source: Homebrew frequently builds dependencies from source, which requires intermediate tools (compilers, development headers) to be downloaded, increasing the total space usage during the installation process.
+Version Compatibility: PostGIS versions are strictly tied to specific PostgreSQL versions, forcing updates to bring in new binaries.

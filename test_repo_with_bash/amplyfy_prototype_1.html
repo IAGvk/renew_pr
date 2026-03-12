@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Amplyfy • O&M Intelligence (MVP Prototype)</title>
+    <style>
+        :root {
+            /* Neutral warm palette */
+            --bg: #faf7f2;
+            /* paper-warm */
+            --panel: #fffdfa;
+            /* card-warm */
+            --ink: #2a2623;
+            /* near black, warm */
+            --ink-dim: #524b45;
+            /* muted */
+            --muted: #8b8177;
+            /* secondary text */
+            --line: #e8e1d9;
+            /* divider */
+            --brand: #c27b39;
+            /* warm amber (primary) */
+            --brand-ink: #ffffff;
+            /* on brand */
+            --accent: #e4a968;
+            /* accent/hover */
+            --ok: #3d8b6d;
+            --warn: #b0751a;
+            --err: #b7443f;
+
+            --radius: 12px;
+            --radius-sm: 10px;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+
+            --space-1: .5rem;
+            --space-2: .75rem;
+            --space-3: 1rem;
+            --space-4: 1.25rem;
+            --space-5: 1.5rem;
+            --space-6: 2rem;
+
+            --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font);
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: linear-gradient(180deg, #fffaf3 0%, #fffdf8 100%);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .topbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-3) var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-weight: 700;
+            letter-spacing: .2px;
+        }
+
+        .brand .logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--brand) 0%, #e7b37a 100%);
+            box-shadow: 0 4px 12px rgba(194, 123, 57, .35);
+        }
+
+        nav {
+            margin-left: auto;
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        nav button {
+            background: transparent;
+            border: 0;
+            padding: .6rem .9rem;
+            border-radius: 10px;
+            color: var(--ink);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        nav button.active,
+        nav button:hover {
+            background: #fff6ea;
+            color: var(--brand);
+        }
+
+        .user {
+            margin-left: var(--space-2);
+            padding: .45rem .7rem;
+            border-radius: 999px;
+            background: #fff3e1;
+            color: var(--brand);
+            font-weight: 600;
+            border: 1px solid var(--line);
+        }
+
+        /* Page container */
+        .container {
+            max-width: 1200px;
+            padding: var(--space-5);
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Cards / Panels */
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .card.pad {
+            padding: var(--space-4);
+        }
+
+        .grid {
+            display: grid;
+            gap: var(--space-4);
+        }
+
+        .grid-2 {
+            grid-template-columns: 1.1fr .9fr;
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        @media (max-width: 980px) {
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Buttons / Inputs */
+        .btn {
+            background: var(--brand);
+            color: var(--brand-ink);
+            border: 0;
+            border-radius: 10px;
+            padding: .7rem 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(194, 123, 57, .25);
+        }
+
+        .btn:hover {
+            background: #b46d2f;
+        }
+
+        .btn.secondary {
+            background: #fff;
+            color: var(--brand);
+            border: 1px solid var(--brand);
+            box-shadow: none;
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px dashed var(--line);
+            color: var(--ink-dim);
+        }
+
+        .input,
+        select {
+            width: 100%;
+            padding: .7rem .8rem;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: #fffefd;
+            font: inherit;
+        }
+
+        .badge {
+            font-size: .78rem;
+            font-weight: 700;
+            padding: .25rem .5rem;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--muted);
+        }
+
+        .pill {
+            font-size: .75rem;
+            padding: .25rem .55rem;
+            border-radius: 999px;
+            background: #fff0da;
+            color: var(--brand);
+            font-weight: 700;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            font-size: .9rem;
+            color: var(--muted);
+            padding: .6rem .4rem;
+            border-bottom: 1px solid var(--line);
+        }
+
+        tbody td {
+            padding: .75rem .4rem;
+            border-bottom: 1px solid var(--line);
+        }
+
+        /* Chips / Filters */
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+
+        .chip {
+            padding: .35rem .65rem;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--ink-dim);
+        }
+
+        .chip.active,
+        .chip:hover {
+            background: #fff4e6;
+            border-color: #f0e2cf;
+            color: var(--brand);
+        }
+
+        /* Section helpers */
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .75rem;
+            margin-bottom: .75rem;
+        }
+
+        .h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: .1px;
+        }
+
+        .h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: .1px;
+        }
+
+        .subtle {
+            color: var(--muted);
+        }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .spacer {
+            height: 1px;
+            background: var(--line);
+            margin: .75rem 0;
+        }
+
+        .mt2 {
+            margin-top: var(--space-2);
+        }
+
+        .mt4 {
+            margin-top: var(--space-4);
+        }
+
+        .mb2 {
+            margin-bottom: var(--space-2);
+        }
+
+        .mb4 {
+            margin-bottom: var(--space-4);
+        }
+
+        .ok {
+            color: var(--ok);
+            font-weight: 700;
+        }
+
+        .warn {
+            color: var(--warn);
+            font-weight: 700;
+        }
+
+        .err {
+            color: var(--err);
+            font-weight: 700;
+        }
+
+        /* Fake map panel */
+        .map {
+            height: 420px;
+            border-radius: var(--radius);
+            background:
+                linear-gradient(180deg, #fffdfa 0%, #fff7ec 100%),
+                repeating-linear-gradient(0deg, transparent 0 19px, rgba(0, 0, 0, 0.03) 19px 20px),
+                repeating-linear-gradient(90deg, transparent 0 19px, rgba(0, 0, 0, 0.03) 19px 20px);
+            border: 1px solid var(--line);
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 100;
+            padding: .7rem 1rem;
+            background: #2e2a26;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all .25s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="topbar">
+            <div class="brand">
+                <div class="logo"></div> Amplyfy
+            </div>
+            <nav id="topnav">
+                <button data-view="sites" class="active">Sites</button>
+                <button data-view="upload">Upload</button>
+                <button data-view="detections">Detections</button>
+                <button data-view="roi">ROI</button>
+                <button data-view="actions">Actions</button>
+                <button data-view="workorder">Work Order</button>
+            </nav>
+            <div class="user">Vikesh • Owner</div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- SITES -->
+        <section id="view-sites" class="grid">
+            <div class="section-title">
+                <div class="h1">Sites</div>
+                <button class="btn ghost" onclick="toast('Add Site: coming soon')">+ Add Site</button>
+            </div>
+            <div class="card pad">
+                <div class="row mb2">
+                    <div class="h2">Pilot C&I Rooftop</div>
+                    <span class="badge">Sydney, NSW</span>
+                    <span class="badge">3.0 MW</span>
+                    <span class="pill">Healthy</span>
+                    <span class="subtle">• Last ingest: <span class="ok">✓</span></span>
+                    <span class="subtle">• ΔMWh Found: <b>1.2</b></span>
+                </div>
+                <div class="grid grid-3">
+                    <div class="card pad">
+                        <div class="subtle mb2">Quick Links</div>
+                        <div class="row mb2">
+                            <button class="btn secondary" onclick="go('upload')">Upload</button>
+                            <button class="btn secondary" onclick="go('detections')">Detections</button>
+                            <button class="btn secondary" onclick="go('roi')">ROI</button>
+                        </div>
+                        <div class="subtle">Agentic Prioritizer (v2): <span class="pill">Ready</span></div>
+                    </div>
+                    <div class="card pad">
+                        <div class="subtle mb2">Recent Ingest</div>
+                        <ul style="margin:0; padding-left:1.1rem; line-height:1.55;">
+                            <li>RGB Ortho • 2026‑03‑12 • <span class="ok">Processed</span></li>
+                            <li>Thermal Ortho • 2026‑03‑11 • <span class="ok">Processed</span></li>
+                            <li>Telemetry CSV • 2026‑03‑11 • <span class="ok">Parsed</span></li>
+                        </ul>
+                    </div>
+                    <div class="card pad">
+                        <div class="subtle mb2">KPIs</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:.75rem;">
+                            <div>
+                                <div class="subtle">Annual loss est.</div>
+                                <div style="font-weight:800;">1.37 MWh</div>
+                            </div>
+                            <div>
+                                <div class="subtle">Value at risk</div>
+                                <div style="font-weight:800;">AUD $192</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UPLOAD -->
+        <section id="view-upload" class="grid" hidden>
+            <div class="section-title">
+                <div class="h1">Upload / Ingest</div>
+                <div class="subtle">Site: <b>Pilot C&I Rooftop</b></div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card pad">
+                    <div class="h2 mb2">Drop files</div>
+                    <div class="grid grid-2">
+                        <div class="card pad">
+                            <div class="subtle">RGB Orthomosaic</div>
+                            <button class="btn ghost mt2" onclick="simulateUpload('RGB Ortho', 'rgb')">Choose
+                                file</button>
+                        </div>
+                        <div class="card pad">
+                            <div class="subtle">Thermal Orthomosaic</div>
+                            <button class="btn ghost mt2" onclick="simulateUpload('Thermal Ortho','thermal')">Choose
+                                file</button>
+                        </div>
+                        <div class="card pad">
+                            <div class="subtle">Telemetry CSV</div>
+                            <button class="btn ghost mt2" onclick="simulateUpload('Telemetry CSV','csv')">Choose
+                                file</button>
+                        </div>
+                        <div class="card pad">
+                            <div class="subtle">Flight Log (optional)</div>
+                            <button class="btn ghost mt2" onclick="simulateUpload('Flight Log','log')">Choose
+                                file</button>
+                        </div>
+                    </div>
+
+                    <div class="spacer"></div>
+                    <div class="h2 mb2">Pending Uploads</div>
+                    <div id="pending-list" class="grid"></div>
+                </div>
+
+                <div class="card pad">
+                    <div class="h2 mb2">Required Metadata</div>
+                    <div class="grid">
+                        <label>Flight Date/Time <input class="input" type="datetime-local"
+                                value="2026-03-12T10:00"></label>
+                        <label>Emissivity <input class="input" type="number" step="0.01" value="0.95"></label>
+                        <div class="grid grid-2">
+                            <label>Wind (m/s) <input class="input" type="number" step="0.1" value="2.0"></label>
+                            <label>Irradiance (W/m²) <input class="input" type="number" value="780"></label>
+                        </div>
+                        <label>GSD (cm/pixel) <input class="input" type="number" step="0.01" value="2.5"></label>
+                        <div class="row">
+                            <button class="btn secondary" onclick="toast('NASA POWER QC computed')">Compute via NASA
+                                POWER</button>
+                            <button class="btn" onclick="toast('Processing started • You will be notified')">Start
+                                Processing</button>
+                        </div>
+
+                        <div class="spacer"></div>
+                        <div class="h2 mb2">QC Flags</div>
+                        <ul style="margin:0; padding-left:1.1rem; line-height:1.6;">
+                            <li><span class="ok">✓</span> Irradiance &gt; 600 W/m²</li>
+                            <li><span class="ok">✓</span> Overlap OK</li>
+                            <li><span class="warn">⚠</span> Wind borderline</li>
+                            <li><span class="ok">✓</span> Radiometric calibration OK</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DETECTIONS -->
+        <section id="view-detections" class="grid" hidden>
+            <div class="section-title">
+                <div class="h1">Detections</div>
+                <div class="row">
+                    <select id="survey-select" class="input" style="max-width: 320px;">
+                        <option>Survey • 2026‑03‑12 (RGB + Thermal)</option>
+                        <option>Survey • 2026‑02‑10 (RGB)</option>
+                    </select>
+                    <button class="btn secondary" onclick="toast('Survey compared')">Compare Surveys</button>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card pad">
+                    <div class="row mb2">
+                        <div class="chips">
+                            <div class="chip active" onclick="toggleChip(this)">Soiling</div>
+                            <div class="chip active" onclick="toggleChip(this)">Vegetation</div>
+                            <div class="chip active" onclick="toggleChip(this)">Hotspots</div>
+                        </div>
+                        <div style="margin-left:auto;">
+                            <button class="btn ghost" onclick="toast('RGB layer toggled')">RGB</button>
+                            <button class="btn ghost" onclick="toast('Thermal layer toggled')">Thermal</button>
+                        </div>
+                    </div>
+                    <div class="map">Map preview • detection polygons</div>
+                </div>
+
+                <div class="card pad">
+                    <div class="h2 mb2">List</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Conf</th>
+                                <th>Area/Ref</th>
+                                <th>ΔMWh</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="det-list">
+                            <!-- rows injected via JS -->
+                        </tbody>
+                    </table>
+                    <div class="row mt2">
+                        <button class="btn" onclick="sendSelectedToROI()">Estimate Impact</button>
+                        <button class="btn secondary" onclick="toast('Added to Work Order draft')">Add to Work
+                            Order</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI -->
+        <section id="view-roi" class="grid" hidden>
+            <div class="section-title">
+                <div class="h1">ROI Summary</div>
+                <button class="btn secondary" onclick="toast('Assumptions editor coming soon')">Assumptions ▸</button>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card pad">
+                    <div class="subtle">Estimated Annual Loss</div>
+                    <div class="h1">1.37 MWh</div>
+                </div>
+                <div class="card pad">
+                    <div class="subtle">Value at Risk</div>
+                    <div class="h1">AUD $192</div>
+                </div>
+                <div class="card pad">
+                    <div class="subtle">Quick Wins</div>
+                    <div class="h1">3 actions</div>
+                </div>
+            </div>
+
+            <div class="card pad mt2">
+                <div class="h2 mb2">Breakdown</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>ΔMWh</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Soiling</td>
+                            <td>2</td>
+                            <td>0.82</td>
+                        </tr>
+                        <tr>
+                            <td>Vegetation</td>
+                            <td>1</td>
+                            <td>0.34</td>
+                        </tr>
+                        <tr>
+                            <td>Hotspots</td>
+                            <td>3</td>
+                            <td>0.21</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row mt2">
+                    <button class="btn" onclick="go('actions')">Generate Prioritized Actions</button>
+                    <button class="btn secondary" onclick="toast('Exported ROI CSV')">Export CSV</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACTIONS -->
+        <section id="view-actions" class="grid" hidden>
+            <div class="section-title">
+                <div class="h1">Prioritized Actions</div>
+                <div class="row">
+                    <span class="subtle">Scoring model: ΔMWh / Cost (MVP)</span>
+                    <button class="btn secondary" onclick="toast('Agentic prioritizer (v2) queued')">Send to Agentic
+                        Prioritizer (v2)</button>
+                </div>
+            </div>
+
+            <div class="card pad">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Action</th>
+                            <th>Impact</th>
+                            <th>Cost</th>
+                            <th>Rank</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="actions-list">
+                        <!-- injected -->
+                    </tbody>
+                </table>
+                <div class="row mt2">
+                    <button class="btn" onclick="go('workorder')">Create Work Order</button>
+                    <button class="btn secondary" onclick="toast('Exported actions CSV')">Export CSV</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORK ORDER -->
+        <section id="view-workorder" class="grid" hidden>
+            <div class="section-title">
+                <div class="h1">Create Work Order</div>
+                <span class="subtle">Site: Pilot C&I Rooftop</span>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card pad">
+                    <label class="mb2">Title <input class="input" id="wo-title"
+                            value="C&I Rooftop — Q2 Quick Wins"></label>
+                    <label class="mb2">Description <textarea class="input" id="wo-desc"
+                            rows="4">Bundle quick ROI actions before monsoon.</textarea></label>
+                    <div class="row">
+                        <button class="btn" onclick="toast('Work Order created')">Create Work Order</button>
+                        <button class="btn secondary" onclick="toast('Cancelled')">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="card pad">
+                    <div class="h2 mb2">Actions Included</div>
+                    <ul id="wo-actions" style="margin:0; padding-left:1.1rem; line-height:1.6;"></ul>
+                    <div class="spacer"></div>
+                    <div class="row">
+                        <div>
+                            <div class="subtle">Estimated Total Cost</div>
+                            <div class="h2" id="wo-cost">AUD $93</div>
+                        </div>
+                        <div style="margin-left:auto;">
+                            <div class="subtle">Estimated Energy Gain</div>
+                            <div class="h2" id="wo-gain">1.28 MWh</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast">Saved</div>
+
+    <script>
+        // Simple router (no framework)
+        const views = ["sites", "upload", "detections", "roi", "actions", "workorder"];
+        const nav = document.getElementById('topnav');
+
+        function go(view) {
+            views.forEach(v => {
+                document.getElementById(`view-${v}`).hidden = (v !== view);
+                nav.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+            });
+            window.location.hash = view;
+        }
+
+        window.addEventListener('hashchange', () => {
+            const v = location.hash.replace('#', '') || 'sites';
+            if (views.includes(v)) go(v);
+        });
+
+        // Toast
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 1800);
+        }
+
+        // Upload simulation
+        function simulateUpload(name, kind) {
+            const list = document.getElementById('pending-list');
+            const row = document.createElement('div');
+            row.className = 'card pad';
+            row.innerHTML = `
+      <div class="row">
+        <span>${name}</span>
+        <span class="subtle">• Processing...</span>
+        <span style="margin-left:auto;"><button class="btn ghost" onclick="this.closest('.card').remove()">Remove</button></span>
+      </div>`;
+            list.prepend(row);
+            toast(`${name}: queued`);
+            setTimeout(() => { row.querySelector('.subtle').innerHTML = '<span class="ok">✓ Completed</span>'; }, 1200);
+        }
+
+        // Chip toggles
+        function toggleChip(el) { el.classList.toggle('active'); }
+
+        // Demo data for detections list
+        const detections = [
+            { type: 'Hotspot', conf: 0.94, ref: 'Module A3-R2', delta: 0.12 },
+            { type: 'Vegetation', conf: 0.89, ref: 'String S12', delta: 0.34 },
+            { type: 'Soiling', conf: 0.82, ref: 'Array A patch', delta: 0.51 },
+        ];
+
+        // Populate detections
+        (function fillDetections() {
+            const tb = document.getElementById('det-list');
+            detections.forEach((d, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+        <td><input type="checkbox" checked> ${d.type}</td>
+        <td>${d.conf.toFixed(2)}</td>
+        <td>${d.ref}</td>
+        <td>+${d.delta.toFixed(2)} MWh</td>
+        <td><button class="btn ghost" onclick="toast('Added ${d.type} to Work Order draft')">Add</button></td>
+      `;
+                tb.appendChild(tr);
+            });
+        })();
+
+        // Send selected to ROI (no persistence, just navigate)
+        function sendSelectedToROI() {
+            toast('Impact computed for selected items');
+            go('roi');
+        }
+
+        // Actions (MVP) with simple scoring
+        const actions = [
+            { action: 'Trim vegetation S12', impact: 0.34, cost: 32, rank: 9.7 },
+            { action: 'Clean array A', impact: 0.82, cost: 46, rank: 9.3 },
+            { action: 'Inspect hotspot #32', impact: 0.12, cost: 15, rank: 8.9 },
+        ];
+
+        (function fillActions() {
+            const tb = document.getElementById('actions-list');
+            actions.forEach((a, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${a.action}</td>
+        <td>+${a.impact.toFixed(2)} MWh</td>
+        <td>AUD $${a.cost}</td>
+        <td>★${a.rank}</td>
+        <td><button class="btn ghost" onclick="addToWO(${i})">Include</button></td>
+      `;
+                tb.appendChild(tr);
+            });
+        })();
+
+        // Work order build-up
+        const wo = { items: new Set(), cost: 0, gain: 0 };
+        function addToWO(idx) {
+            const a = actions[idx];
+            if (!wo.items.has(idx)) {
+                wo.items.add(idx);
+                wo.cost += a.cost;
+                wo.gain += a.impact;
+                toast(`Included: ${a.action}`);
+                refreshWO();
+            } else {
+                toast(`Already included`);
+            }
+        }
+        function refreshWO() {
+            const ul = document.getElementById('wo-actions');
+            ul.innerHTML = '';
+            Array.from(wo.items).forEach(i => {
+                const li = document.createElement('li');
+                li.textContent = actions[i].action;
+                ul.appendChild(li);
+            });
+            document.getElementById('wo-cost').textContent = `AUD $${wo.cost}`;
+            document.getElementById('wo-gain').textContent = `${wo.gain.toFixed(2)} MWh`;
+        }
+
+        // Initial route
+        go((location.hash || '#sites').replace('#', ''));
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+
+# 0) Clone & enter
+git clone https://github.com/your-org/amplyfy-om-intel.git
+cd amplyfy-om-intel
+
+# 1) Python env
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+# 2) Configure environment
+cp .env.example .env
+# Edit .env: DB URL, NREL_API_KEY (optional for NSRDB), CDS API (optional for ERA5)
+
+# 3) Run migrations & seed
+make db.migrate
+make db.seed
+
+# 4) Pull open datasets & load
+make fetch.all    # pulls PVDAQ, PV-IV-EL, NASA POWER, PVGIS, (NSRDB if key present), OAM sample
+make load.sample  # loads a subset into DB for smoke tests

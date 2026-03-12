@@ -1,0 +1,32 @@
+amplyfy-om-intel/
+├─ README.md
+├─ .env.example
+├─ requirements.txt
+├─ Makefile
+├─ db/
+│  └─ migrations/
+│     ├─ 001_init.sql
+│     └─ 002_seed.sql
+├─ etl/
+│  ├─ utils/
+│  │  ├─ db.py
+│  │  └─ geo.py
+│  ├─ fetch_pvdaq.py
+│  ├─ fetch_pv_iv_el.py
+│  ├─ fetch_nasa_power.py
+│  ├─ fetch_nsrdb.py
+│  ├─ fetch_pvgis.py
+│  ├─ fetch_oam.py
+│  ├─ load_inverter_csv.py
+│  ├─ load_artifact.py
+│  └─ bootstrap_open_data.sh
+└─ data/
+   ├─ raw/
+   │  ├─ pvdaq/
+   │  ├─ pv_iv_el/
+   │  ├─ nasa_power/
+   │  ├─ nsrdb/
+   │  ├─ pvgis/
+   │  └─ oam/
+   └─ processed/
+``

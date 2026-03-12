@@ -1,0 +1,27 @@
+1. EnergyTag Accredited Granular Certificate Issuers 
+EnergyTag has accredited the first round of organizations capable of issuing hourly Granular Certificates (GCs) to provide, transparent, and accurate tracking. 
+EnergyTag
+EnergyTag
+ +1
+Flexidao SES S.L.U. (Accredited Granular Certificate Issuer - Region: Various, including Australia)
+Granular Energy (Accredited Granular Certificate Issuer - Region: Various, including Australia) 
+EnergyTag
+EnergyTag
+2. Australian 24/7 Hourly Matching Initiatives (EnergyTag Affiliated) 
+These organizations are directly involved in trials, projects, or platforms that utilize or align with EnergyTag standards for 24/7, hour-by-hour tracking of clean energy in Australia: 
+CEEM, UNSW
+CEEM, UNSW
+ +1
+Enosi Australia Pty Ltd (Developer of the Powertracer platform, which allows 24/7, sub-hourly matching)
+Google Australia Pty Ltd (Active participant in 24/7 projects)
+RACE for 2030 Ltd (Collaborative Research Centre involved in 24/7 tracking)
+Starling Energy Group Pty Ltd
+Buildings Alive Pty Ltd
+University of New South Wales (UNSW) (Collaborative research on Energy and Environmental Markets) 
+CEEM, UNSW
+CEEM, UNSW
+ +2
+3. Contextual Regulatory Framework (Future)
+The Australian Government is introducing the Renewable Electricity Guarantee of Origin (REGO) scheme. 
+REGOs will eventually replace Large-scale Generation Certificates (LGCs) in 2030.
+These REGOs are designed to facilitate time-stamped, hourly tracking, aligning with the "Granular Certificate" model promoted by EnergyTag. 
